@@ -37,7 +37,7 @@ class DiagramWindow(pyglet.window.Window):
 		def addPointsForDrawing(self, newPoints=[]):			
 			if newPoints:
 				self.points.extend(newPoints)
-				print("Adding " + str(len(newPoints)) + "points to those drawn. Total: " + str(len(self.points)))
+				print("Adding " + str(len(newPoints)) + " points to those drawn. Total: " + str(len(self.points)))
 			else:
 				print("List for addPointsForDrawing() contained no points: " + str(len(newPoints)))
 
