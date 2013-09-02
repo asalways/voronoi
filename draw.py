@@ -14,25 +14,51 @@ class DiagramWindow(pyglet.window.Window):
 			self.gridColor = (0, 0.2, 0.4, 1)
 			self.gridWidth = []
 
+			self.vertices = []
+			self.ridgePoints = []
+			self.ridgeVertices = []
+			self.regions = []
+
 		def on_draw(self):
 			self.clear()
 			self.drawGrid()
-			self.drawPoints()
+			self.drawPoints(self.points, (1,0,0,1))
+			self.drawPoints(self.ridgePoints, (0,1,0,1))
+			self.drawPoints(self.ridgeVertices, (0,0,1,1))
+			self.drawPoints(self.vertices, (1,0,1,1))
+			self.drawRegions()
 
-		def drawPoints(self):
+		def drawPoints(self, points, col):
 			# Draw points by creating vertex array
 			verts = []
-			for point in self.points:
+			for point in points:
 				verts.extend([point[0], point[1]])
 
 			if verts:
-				pyglet.gl.glColor4f(1, 0, 0, 1)
+				pyglet.gl.glColor4f(*col)
 				# Draw tile as two triangles
 				pyglet.graphics.draw( 
 					int(len(verts)/2), 
 					pyglet.gl.GL_POINTS,
 					('v2f', verts)
 				)
+		
+		def drawRegions(self):
+			pyglet.gl.glColor4f(1,1,1,1)
+			for region in self.regions:
+				verts = []
+				#print(region)
+				for pointIndex in region:
+					#print("Vertices length: " + str(len(self.vertices)))
+					#print(pointIndex)
+					verts.extend( self.vertices[pointIndex] )
+				#print(verts)
+				pyglet.graphics.draw( 
+					int(len(verts)/2), 
+					pyglet.gl.GL_LINE_LOOP,
+					('v2f', verts)
+				)
+				pass
 
 		def addPointsForDrawing(self, newPoints=[]):			
 			if newPoints:

@@ -146,14 +146,23 @@ v = VoronoiDiagram()
 #	yJitter = (random.random() * cellHeight) - (cellHeight / 2)
 #	print(str(xJitter) + " " + str(yJitter))
 
-#w = draw.DiagramWindow(v.width, v.height)
+w = draw.DiagramWindow(v.width, v.height)
 
 # Scipy Voronoi #
 vor = Voronoi(v.points)
-voronoi_plot_2d(vor)
-plt.show()
+#voronoi_plot_2d(vor)
+#plt.show()
+
+w.vertices.extend(vor.vertices)
+#print(w.vertices)
+w.ridgePoints.extend(vor.ridge_points)
+#print(w.ridgePoints)
+w.ridgeVertices.extend(vor.ridge_vertices)
+#print(w.ridgeVertices)
+w.regions.extend(vor.regions)
+#print(vor.regions)
 ##
 
-#w.addPointsForDrawing(v.points)
+w.addPointsForDrawing(v.points)
 #w.addGridWidthForDrawing(math.sqrt(80))
-#pyglet.app.run()
+pyglet.app.run()
