@@ -4,11 +4,15 @@ import pyglet
 from pyglet.gl import *
 from pyglet.window import key
 
+import numpy
+from scipy.spatial import Voronoi, voronoi_plot_2d
+import matplotlib.pyplot as plt
+
 import draw
 
 # Takes a list of points as input, or generates its own if none
 
-class Voronoi():
+class VoronoiDiagram():
 	def __init__(self, points=[], totalPoints=700, width=800, height=800):
 		self.points = points
 		self.width = width
@@ -132,7 +136,7 @@ class Voronoi():
 		# Return poisson disks points output
 		return outputPoints
 
-v = Voronoi()
+v = VoronoiDiagram()
 
 #print("jitter")
 #cellWidth = 10
@@ -142,7 +146,14 @@ v = Voronoi()
 #	yJitter = (random.random() * cellHeight) - (cellHeight / 2)
 #	print(str(xJitter) + " " + str(yJitter))
 
-w = draw.DiagramWindow(v.width, v.height)
-w.addPointsForDrawing(v.points)
+#w = draw.DiagramWindow(v.width, v.height)
+
+# Scipy Voronoi #
+vor = Voronoi(v.points)
+voronoi_plot_2d(vor)
+plt.show()
+##
+
+#w.addPointsForDrawing(v.points)
 #w.addGridWidthForDrawing(math.sqrt(80))
-pyglet.app.run()
+#pyglet.app.run()
