@@ -225,8 +225,45 @@ def createCellObjs(initialPoints, vor, pointObjs):
 		final.append(newCell)
 	return final
 
-w.cellObjs = createCellObjs(v.points, vor, w.pointObjs)
+cellObjs = createCellObjs(v.points, vor, w.pointObjs)
 #print(w.cellObjs)
+
+def clampCellObjsToBoundary(cells, xInterval, yInterval):
+	print("Total cells before discarding OOBs: " + str(len(cells)))
+	clampedCells = []
+	while cells:
+		cell = cells.pop()
+		rejectCell = False	
+		# Clamp all points to interval
+		pointsClamped = 0
+		for point in cell.points:
+			wasClamped = False
+			# Clamp x dimension
+			if point.coords[0] <= xInterval[0]:
+				point.coords[0] = xInterval[0]
+				wasClamped = True
+			elif point.coords[0] >= xInterval[1]:
+				point.coords[0] = xInterval[1]
+				wasClamped = True
+			# Clamp y dimension
+			if point.coords[1] <= yInterval[0]:
+				point.coords[1] = yInterval[0]
+				wasClamped = True
+			elif point.coords[1] >= yInterval[1]:
+				point.coords[1] = yInterval[1]
+				wasClamped = True
+			# Increment clamping counter if any dimension was clamped for this point
+			if wasClamped:
+				pointsClamped += 1
+		# Retain cell only if not all points were clamped
+		if not pointsClamped == len(cell.points):
+			clampedCells.append(cell)
+	print("Total cells after discarding OOBs: " + str(len(clampedCells)))
+	return clampedCells
+
+# Clamp dimensions for cellObjs and discard those which are completely out of bounds
+cellObjs = clampCellObjsToBoundary(cellObjs, [xMargin, xMargin+xDim], [yMargin, yMargin+yDim])
+w.cellObjs = cellObjs
 
 w.addPointsForDrawing(v.points)
 #w.addGridWidthForDrawing(math.sqrt(80))
