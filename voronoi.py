@@ -25,6 +25,8 @@ class VoronoiDiagram():
 			self.points = self.generatePoissonDiskPoints()
 		else:
 			totalPoints = len(self.points)
+		# Add sample points for corners of region
+		self.addBoundaryPoints(width, height)
 
 	def applyMarginToPoints(self, xMargin, yMargin):
 		for i in range(len(self.points)):
@@ -141,6 +143,10 @@ class VoronoiDiagram():
 		# Return poisson disks points output
 		return outputPoints
 
+	def addBoundaryPoints(self, xDim, yDim):
+		boundaryPoints = [(0,0), (0,yDim), (xDim, 0), (xDim, yDim)]
+		self.points.extend(boundaryPoints)
+
 xDim = 300
 yDim = 300
 
@@ -156,7 +162,7 @@ v.applyMarginToPoints(xMargin, yMargin)
 #	yJitter = (random.random() * cellHeight) - (cellHeight / 2)
 #	print(str(xJitter) + " " + str(yJitter))
 
-w = draw.DiagramWindow(v.width+2*xMargin, v.height+2*yMargin)
+w = draw.DiagramWindow(v.width+2*xMargin, v.height+2*yMargin, [xMargin, xMargin+xDim], [yMargin, yMargin+yDim])
 
 # Scipy Voronoi #
 vor = Voronoi(v.points)
@@ -199,7 +205,10 @@ def createCellObjs(initialPoints, vor, pointObjs):
 		for n in vor.regions[i]:
 			#print("n: " + str(n))
 			# Use point objects rather than vertex information
-			points.append(pointObjs[n])
+			if n == -1:
+				print("N is minus 1")
+			else:
+				points.append(pointObjs[n])
 		newCell = geometry.Cell( newCentre, points )
 		final.append(newCell)
 	return final

@@ -5,15 +5,15 @@ import pyglet
 
 class Point():
 	def __init__(self, x, y, xInterval, yInterval):
-		if x < xInterval[0]:
-			x = xInterval[0]
-		if x > xInterval[1]:
-			x = xInterval[1]
+		# if x < xInterval[0]:
+		# 	x = xInterval[0]
+		# if x > xInterval[1]:
+		# 	x = xInterval[1]
 		
-		if y < yInterval[0]:
-			y = yInterval[0]
-		if y > yInterval[1]:
-			y = yInterval[1]
+		# if y < yInterval[0]:
+		# 	y = yInterval[0]
+		# if y > yInterval[1]:
+		# 	y = yInterval[1]
 		
 		self.coords = [x, y]
 		self.altitude = random.random()

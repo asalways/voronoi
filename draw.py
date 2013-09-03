@@ -5,11 +5,13 @@ from pyglet.window import key
 import geometry
 
 class DiagramWindow(pyglet.window.Window):
-		def __init__(self, width=800, height=800):
+		def __init__(self, width=800, height=800, xInterval=0, yInterval=0):
 			super(DiagramWindow, self).__init__()
 
 			self.width = width
 			self.height = height
+			self.xInterval = xInterval
+			self.yInterval = yInterval
 			self.set_size(width, height)
 
 			self.points = []
@@ -26,7 +28,7 @@ class DiagramWindow(pyglet.window.Window):
 
 		def on_draw(self):
 			self.clear()
-			#self.drawGrid()
+			self.drawGrid()
 			#self.drawPoints(self.points, (1,0,0,1))
 			#self.drawPoints(self.vertices, (1,0,1,1))
 			self.drawRegions()
@@ -34,6 +36,7 @@ class DiagramWindow(pyglet.window.Window):
 			self.drawRidgeVertices()
 			#self.drawFilledCells()
 			self.drawCellObjBorders()
+			self.drawAreaLimit()
 
 		def drawPoints(self, points, col):
 			# Draw points by creating vertex array
@@ -174,3 +177,17 @@ class DiagramWindow(pyglet.window.Window):
 
 		def clearPoints(self):
 			self.points = []
+
+		def drawAreaLimit(self):
+			print("Draw area limit")
+			verts = []
+			verts.extend([self.xInterval[0],self.yInterval[0]])
+			verts.extend([self.xInterval[1],self.yInterval[0]])
+			verts.extend([self.xInterval[1],self.yInterval[1]])
+			verts.extend([self.xInterval[0],self.yInterval[1]])
+			pyglet.gl.glColor4f(1,1,1,1)
+			pyglet.graphics.draw( 
+				int(len(verts)/2), 
+				pyglet.gl.GL_LINE_LOOP,
+				('v2f', verts)
+			)
