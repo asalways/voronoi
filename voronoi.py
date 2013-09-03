@@ -9,6 +9,7 @@ from scipy.spatial import Voronoi, voronoi_plot_2d
 import matplotlib.pyplot as plt
 
 import draw
+import geometry
 
 # Takes a list of points as input, or generates its own if none
 
@@ -60,7 +61,7 @@ class VoronoiDiagram():
 			points.extend( [ (gridPoints[n][0] + xJitter, gridPoints[n][1] + yJitter) ] )
 		return points
 
-	def generatePoissonDiskPoints(self, minDist=150):
+	def generatePoissonDiskPoints(self, minDist=450):
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 
@@ -163,6 +164,45 @@ w.regions.extend(vor.regions)
 #print(vor.regions)
 ##
 
+print(vor.ridge_points)
+
+def createPointObjs(vor):
+	final = []
+	for vertex in vor.vertices:
+		final.append(geometry.Point(vertex[0], vertex[1]))
+	return final
+
+w.pointObjs = createPointObjs(vor)
+
+def createCellObjs(initialPoints, vor, pointObjs):
+	final = []
+	print("Total regions:")
+	print(len(vor.regions))
+	print("Total points:")
+	print(len(vor.points))
+	for i in range(len(vor.points)):
+		#print("i: " + str(i))
+		# There are half as many points as there are values in initialPoints (is 2d)
+		#print(vor.points)
+		#print(vor.points[i*2])
+		newCentre = geometry.Point(vor.points[i][0], vor.points[i][1])
+		# Use index i to find set of points surrounding region
+		points = []
+		for n in vor.regions[i]:
+			#print("n: " + str(n))
+			# Use point objects rather than vertex information
+			points.append(pointObjs[n])
+		newCell = geometry.Cell( newCentre, points )
+		final.append(newCell)
+	return final
+
+w.cellObjs = createCellObjs(v.points, vor, w.pointObjs)
+#print(w.cellObjs)
+
 w.addPointsForDrawing(v.points)
 #w.addGridWidthForDrawing(math.sqrt(80))
+
+glEnable(GL_BLEND)
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
 pyglet.app.run()
