@@ -26,6 +26,10 @@ class VoronoiDiagram():
 		else:
 			totalPoints = len(self.points)
 
+	def applyMarginToPoints(self, xMargin, yMargin):
+		for i in range(len(self.points)):
+			self.points[i] = [ self.points[i][0]+xMargin, self.points[i][1]+yMargin ]
+
 	def generatePoints(self, totalPoints):
 		newPoints = [ (random.random()*self.width, random.random()*self.height) for x in range(totalPoints) ]
 		return newPoints
@@ -61,7 +65,7 @@ class VoronoiDiagram():
 			points.extend( [ (gridPoints[n][0] + xJitter, gridPoints[n][1] + yJitter) ] )
 		return points
 
-	def generatePoissonDiskPoints(self, minDist=450):
+	def generatePoissonDiskPoints(self, minDist=250):
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 
@@ -137,8 +141,13 @@ class VoronoiDiagram():
 		# Return poisson disks points output
 		return outputPoints
 
-v = VoronoiDiagram()
+xDim = 700
+yDim = 700
 
+v = VoronoiDiagram( totalPoints=700, width=xDim, height=yDim)
+xMargin = 100
+yMargin = 100
+v.applyMarginToPoints(xMargin, yMargin)
 #print("jitter")
 #cellWidth = 10
 #cellHeight = 10
@@ -147,7 +156,7 @@ v = VoronoiDiagram()
 #	yJitter = (random.random() * cellHeight) - (cellHeight / 2)
 #	print(str(xJitter) + " " + str(yJitter))
 
-w = draw.DiagramWindow(v.width, v.height)
+w = draw.DiagramWindow(v.width+2*xMargin, v.height+2*yMargin)
 
 # Scipy Voronoi #
 vor = Voronoi(v.points)
@@ -167,7 +176,7 @@ w.regions.extend(vor.regions)
 def createPointObjs(vor):
 	final = []
 	for vertex in vor.vertices:
-		final.append(geometry.Point(vertex[0], vertex[1]))
+		final.append(geometry.Point(vertex[0], vertex[1], [xMargin, xDim+xMargin], [yMargin, yDim+yMargin]))
 	return final
 
 w.pointObjs = createPointObjs(vor)
@@ -183,8 +192,8 @@ def createCellObjs(initialPoints, vor, pointObjs):
 		# There are half as many points as there are values in initialPoints (is 2d)
 		#print(vor.points)
 		#print(vor.points[i*2])
-		newCentre = geometry.Point(vor.points[i][0], vor.points[i][1])
-		#print(newCentre.coords)
+		newCentre = geometry.Point(vor.points[i][0], vor.points[i][1], [xMargin, xDim+xMargin], [yMargin, yDim+yMargin])
+		print(newCentre.coords)
 		# Use index i to find set of points surrounding region
 		points = []
 		for n in vor.regions[i]:

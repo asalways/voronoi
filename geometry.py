@@ -4,16 +4,16 @@ import random
 import pyglet
 
 class Point():
-	def __init__(self, x, y):
-		if x < 0:
-			x = 0
-		if x > 800:
-			x = 800
+	def __init__(self, x, y, xInterval, yInterval):
+		if x < xInterval[0]:
+			x = xInterval[0]
+		if x > xInterval[1]:
+			x = xInterval[1]
 		
-		if y < 0:
-			y = 0
-		if y > 800:
-			y = 800
+		if y < yInterval[0]:
+			y = yInterval[0]
+		if y > yInterval[1]:
+			y = yInterval[1]
 		
 		self.coords = [x, y]
 		self.altitude = random.random()
