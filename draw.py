@@ -33,6 +33,7 @@ class DiagramWindow(pyglet.window.Window):
 			#self.drawRidgePoints()
 			self.drawRidgeVertices()
 			#self.drawFilledCells()
+			self.drawCellObjBorders()
 
 		def drawPoints(self, points, col):
 			# Draw points by creating vertex array
@@ -125,6 +126,10 @@ class DiagramWindow(pyglet.window.Window):
 				#print(cell.points)
 				cell.drawFilledCell()
 				#break
+
+		def drawCellObjBorders(self):
+			for cell in self.cellObjs:
+				cell.drawCellBorder()
 
 		def addPointsForDrawing(self, newPoints=[]):			
 			if newPoints:

@@ -38,3 +38,12 @@ class Cell():
 		pyglet.graphics.draw(len(verts)/2, pyglet.gl.GL_TRIANGLES,
 			('v2f', verts)
 		)
+
+	def drawCellBorder(self):
+		pyglet.gl.glColor4f(1,0,0,1)
+		verts = []
+		for point in self.points:
+			verts.extend(point.coords)
+		pyglet.graphics.draw(len(verts)/2, pyglet.gl.GL_LINE_LOOP,
+			('v2f', verts)
+		)

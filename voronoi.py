@@ -65,7 +65,7 @@ class VoronoiDiagram():
 			points.extend( [ (gridPoints[n][0] + xJitter, gridPoints[n][1] + yJitter) ] )
 		return points
 
-	def generatePoissonDiskPoints(self, minDist=250):
+	def generatePoissonDiskPoints(self, minDist=150):
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 
@@ -141,12 +141,12 @@ class VoronoiDiagram():
 		# Return poisson disks points output
 		return outputPoints
 
-xDim = 700
-yDim = 700
+xDim = 300
+yDim = 300
 
 v = VoronoiDiagram( totalPoints=700, width=xDim, height=yDim)
-xMargin = 100
-yMargin = 100
+xMargin = 300
+yMargin = 300
 v.applyMarginToPoints(xMargin, yMargin)
 #print("jitter")
 #cellWidth = 10
