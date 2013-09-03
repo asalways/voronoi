@@ -71,11 +71,16 @@ class VoronoiDiagram():
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 
-		firstPoint = (random.random()*self.width, random.random()*self.height)
+		xBuffer = int(self.width * 0.2)
+		xMax = self.width + 2*xBuffer
+		yBuffer = int(self.height * 0.2)
+		yMax = self.height + 2*yBuffer
+
+		firstPoint = (random.random()*xMax, random.random()*yMax)
 		processList = [firstPoint]
 		# 2D array is a list of lists
-		xCells = int(self.width / cellDim) + 1
-		yCells = int(self.height / cellDim) + 1
+		xCells = int(xMax / cellDim) + 1
+		yCells = int(yMax / cellDim) + 1
 		grid = [[()*yCells]*(xCells) for n in range(xCells)]
 		##print("MaxGrid: " + str(xCells) + ", " + str(yCells))
 		# Add first point to 2d array
@@ -96,7 +101,7 @@ class VoronoiDiagram():
 				angle = 2 * math.pi * r2
 				newX = nextCentrePoint[0] + radius * math.cos(angle)
 				newY = nextCentrePoint[1] + radius * math.sin(angle)
-				if newX < 0 or newX > self.width or newY < 0 or newY > self.height:
+				if newX < 0 or newX > xMax or newY < 0 or newY > yMax:
 					# Only accept points within the bounds of the screen space
 					continue
 				newPoint = (newX, newY)				
@@ -110,13 +115,13 @@ class VoronoiDiagram():
 				# Get neighbourhood around point
 				for xOffset in range(-2,3):
 					nX = gridX + xOffset
-					if nX < 0 or nX > int(self.width/cellDim):
+					if nX < 0 or nX > int(xMax/cellDim):
 						# Skip out-of-bounds cells
 						##print("Skipping gridX of " + str(nX))
 						continue
 					for yOffset in range(-2,3):
 						nY = gridY + yOffset
-						if nY < 0 or nY > int(self.height/cellDim):
+						if nY < 0 or nY > int(yMax/cellDim):
 							# Skip out-of-bounds cells
 							##print("Skipping gridY of " + str(nY))
 							continue
@@ -140,8 +145,13 @@ class VoronoiDiagram():
 					##print("Grid len: " + str(len(grid)))
 					##print("Adding point with grid locs: " + str(gridX) + ", " + str(gridY))
 					grid[gridX][gridY] = newPoint
+
+		# Shift all points the buffer distance to re-centre diagram
+		finalPoints = []
+		for point in outputPoints:
+			finalPoints.append( (point[0] - xBuffer, point[1] - yBuffer) )
 		# Return poisson disks points output
-		return outputPoints
+		return finalPoints
 
 	def addBoundaryPoints(self, xDim, yDim):
 		boundaryPoints = [(0,0), (0,yDim), (xDim, 0), (xDim, yDim)]
