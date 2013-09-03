@@ -67,7 +67,7 @@ class VoronoiDiagram():
 			points.extend( [ (gridPoints[n][0] + xJitter, gridPoints[n][1] + yJitter) ] )
 		return points
 
-	def generatePoissonDiskPoints(self, minDist=150):
+	def generatePoissonDiskPoints(self, minDist=75):
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 
@@ -157,7 +157,7 @@ class VoronoiDiagram():
 		boundaryPoints = [(0,0), (0,yDim), (xDim, 0), (xDim, yDim)]
 		self.points.extend(boundaryPoints)
 
-xDim = 300
+xDim = 400
 yDim = 300
 
 v = VoronoiDiagram( totalPoints=700, width=xDim, height=yDim)
@@ -211,14 +211,15 @@ def createCellObjs(initialPoints, vor, pointObjs):
 		#print(vor.points)
 		#print(vor.points[i*2])
 		newCentre = geometry.Point(vor.points[i][0], vor.points[i][1], [xMargin, xDim+xMargin], [yMargin, yDim+yMargin])
-		print(newCentre.coords)
+		#print(newCentre.coords)
 		# Use index i to find set of points surrounding region
 		points = []
 		for n in vor.regions[i]:
 			#print("n: " + str(n))
 			# Use point objects rather than vertex information
 			if n == -1:
-				print("N is minus 1")
+				#print("N is minus 1")
+				pass
 			else:
 				points.append(pointObjs[n])
 		newCell = geometry.Cell( newCentre, points )
