@@ -26,7 +26,7 @@ class VoronoiDiagram():
 		else:
 			totalPoints = len(self.points)
 		# Add sample points for corners of region
-		self.addBoundaryPoints(width, height)
+		#self.addBoundaryPoints(width, height)
 
 	def applyMarginToPoints(self, xMargin, yMargin):
 		for i in range(len(self.points)):
