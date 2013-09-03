@@ -164,8 +164,6 @@ w.regions.extend(vor.regions)
 #print(vor.regions)
 ##
 
-print(vor.ridge_points)
-
 def createPointObjs(vor):
 	final = []
 	for vertex in vor.vertices:
@@ -176,16 +174,17 @@ w.pointObjs = createPointObjs(vor)
 
 def createCellObjs(initialPoints, vor, pointObjs):
 	final = []
-	print("Total regions:")
-	print(len(vor.regions))
-	print("Total points:")
-	print(len(vor.points))
+	#print("Total regions:")
+	#print(len(vor.regions))
+	#print("Total points:")
+	#print(len(vor.points))
 	for i in range(len(vor.points)):
 		#print("i: " + str(i))
 		# There are half as many points as there are values in initialPoints (is 2d)
 		#print(vor.points)
 		#print(vor.points[i*2])
 		newCentre = geometry.Point(vor.points[i][0], vor.points[i][1])
+		#print(newCentre.coords)
 		# Use index i to find set of points surrounding region
 		points = []
 		for n in vor.regions[i]:

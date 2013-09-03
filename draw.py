@@ -56,7 +56,7 @@ class DiagramWindow(pyglet.window.Window):
 				#print(region)
 				for pointIndex in region:
 					#print("Vertices length: " + str(len(self.vertices)))
-					#print(pointIndex)
+					#print(self.vertices[pointIndex])
 					verts.extend( self.vertices[pointIndex] )
 				#print(verts)
 				pyglet.graphics.draw( 
