@@ -266,7 +266,7 @@ def clampCellObjsToBoundary(cells, xInterval, yInterval):
 				pointsClamped += 1
 			# Track total x and y so average can be found for cell centre
 			xSum += point.coords[0]
-			ySum = point.coords[1]
+			ySum += point.coords[1]
 		# Retain cell only if not all points were clamped
 		if not pointsClamped == len(cell.points) and len(cell.points) > 0:
 			clampedCells.append(cell)
