@@ -185,6 +185,8 @@ class DiagramWindow(pyglet.window.Window):
 			verts.extend([self.xInterval[1],self.yInterval[0]])
 			verts.extend([self.xInterval[1],self.yInterval[1]])
 			verts.extend([self.xInterval[0],self.yInterval[1]])
+			print("Drawing point space with verts:")
+			print(verts)
 			pyglet.gl.glColor4f(1,1,1,1)
 			pyglet.graphics.draw( 
 				int(len(verts)/2), 

@@ -153,7 +153,9 @@ yDim = 300
 v = VoronoiDiagram( totalPoints=700, width=xDim, height=yDim)
 xMargin = 300
 yMargin = 300
+# Shifts all points according to size of margin
 v.applyMarginToPoints(xMargin, yMargin)
+
 #print("jitter")
 #cellWidth = 10
 #cellHeight = 10
