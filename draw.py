@@ -34,7 +34,7 @@ class DiagramWindow(pyglet.window.Window):
 			#self.drawRegions()
 			#self.drawRidgePoints()
 			#self.drawRidgeVertices()
-			#self.drawFilledCells()
+			self.drawFilledCells()
 			self.drawCellObjBorders()
 			self.drawAreaLimit()
 

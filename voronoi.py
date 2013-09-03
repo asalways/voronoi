@@ -3,6 +3,8 @@ import random
 import pyglet
 from pyglet.gl import *
 from pyglet.window import key
+from pyglet import image
+
 
 import numpy
 from scipy.spatial import Voronoi, voronoi_plot_2d
@@ -160,6 +162,10 @@ class VoronoiDiagram():
 xDim = 400
 yDim = 300
 
+# Mask image
+#maskImage = pyglet.resource.image('groundtruth5.bmp')
+
+
 v = VoronoiDiagram( totalPoints=700, width=xDim, height=yDim)
 xMargin = 300
 yMargin = 300
@@ -194,7 +200,7 @@ w.regions.extend(vor.regions)
 def createPointObjs(vor):
 	final = []
 	for vertex in vor.vertices:
-		final.append(geometry.Point(vertex[0], vertex[1], [xMargin, xDim+xMargin], [yMargin, yDim+yMargin]))
+		final.append(geometry.Point(vertex[0], vertex[1]))
 	return final
 
 w.pointObjs = createPointObjs(vor)
@@ -210,7 +216,7 @@ def createCellObjs(initialPoints, vor, pointObjs):
 		# There are half as many points as there are values in initialPoints (is 2d)
 		#print(vor.points)
 		#print(vor.points[i*2])
-		newCentre = geometry.Point(vor.points[i][0], vor.points[i][1], [xMargin, xDim+xMargin], [yMargin, yDim+yMargin])
+		newCentre = geometry.Point(vor.points[i][0], vor.points[i][1])
 		#print(newCentre.coords)
 		# Use index i to find set of points surrounding region
 		points = []
@@ -237,6 +243,8 @@ def clampCellObjsToBoundary(cells, xInterval, yInterval):
 		rejectCell = False	
 		# Clamp all points to interval
 		pointsClamped = 0
+		xSum = 0
+		ySum = 0
 		for point in cell.points:
 			wasClamped = False
 			# Clamp x dimension
@@ -256,9 +264,15 @@ def clampCellObjsToBoundary(cells, xInterval, yInterval):
 			# Increment clamping counter if any dimension was clamped for this point
 			if wasClamped:
 				pointsClamped += 1
+			# Track total x and y so average can be found for cell centre
+			xSum += point.coords[0]
+			ySum = point.coords[1]
 		# Retain cell only if not all points were clamped
-		if not pointsClamped == len(cell.points):
+		if not pointsClamped == len(cell.points) and len(cell.points) > 0:
 			clampedCells.append(cell)
+			# Calculate true centre as average of points
+			print("Cell points length: " + str(len(cell.points)))
+			cell.trueCentre = geometry.Point(xSum/len(cell.points), ySum/len(cell.points))
 	print("Total cells after discarding OOBs: " + str(len(clampedCells)))
 	return clampedCells
 

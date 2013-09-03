@@ -4,23 +4,14 @@ import random
 import pyglet
 
 class Point():
-	def __init__(self, x, y, xInterval, yInterval):
-		# if x < xInterval[0]:
-		# 	x = xInterval[0]
-		# if x > xInterval[1]:
-		# 	x = xInterval[1]
-		
-		# if y < yInterval[0]:
-		# 	y = yInterval[0]
-		# if y > yInterval[1]:
-		# 	y = yInterval[1]
-		
+	def __init__(self, x, y):		
 		self.coords = [x, y]
 		self.altitude = random.random()
 
 class Cell():
 	def __init__(self, centre, points):
 		self.centre = centre
+		self.trueCentre = centre
 		self.points = points
 		self.color = (random.random(), random.random(), random.random(), 0.2)
 
@@ -32,8 +23,8 @@ class Cell():
 			for i in range(len(self.points)):
 				verts.extend( self.points[i].coords )
 				verts.extend( self.points[i-1].coords )
-				verts.extend( self.centre.coords )
-				#print(self.centre.coords)
+				verts.extend( self.trueCentre.coords )
+				#print(self.trueCentre.coords)
 		#print(verts)
 		pyglet.graphics.draw(len(verts)/2, pyglet.gl.GL_TRIANGLES,
 			('v2f', verts)
