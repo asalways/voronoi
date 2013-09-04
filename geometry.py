@@ -24,9 +24,10 @@ class Cell():
 		self.trueCentre = centre
 		self.points = points
 		self.color = (random.random(), random.random(), random.random(), 0.1)
+		self.selected = False
 
 	def drawFilledCell(self, color=False):
-		print("Drawing a cell")
+		#print("Drawing a cell")
 		# Iterate over points, drawing triangles
 		if color:
 			pyglet.gl.glColor4f(*color)
@@ -53,9 +54,10 @@ class Cell():
 			('v2f', verts)
 		)
 
-	def toggleSelection(self, direction):
+	def toggleSelection(self):
 		# Turn opacity up or down
-		if direction:
+		self.selected = not self.selected
+		if self.selected:
 			self.color = (self.color[0], self.color[1], self.color[2], 1)
 		else:
 			self.color = (self.color[0], self.color[1], self.color[2], 0.1)

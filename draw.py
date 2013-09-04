@@ -1,3 +1,4 @@
+import math
 import pyglet
 from pyglet.gl import *
 from pyglet.window import key
@@ -38,6 +39,7 @@ class DiagramWindow(pyglet.window.Window):
 		def on_mouse_press(self, x, y, button, modifiers):
 			if button == mouse.LEFT:
 				print("Left mouse button is pressed")
+				self.hoveredCell.toggleSelection()
 
 		#@Window.event
 		def on_mouse_motion(self, x, y, dx, dy):
@@ -54,7 +56,7 @@ class DiagramWindow(pyglet.window.Window):
 			#self.drawRidgePoints()
 			#self.drawRidgeVertices()
 			
-			#self.drawFilledCells()
+			self.drawFilledCells()
 			self.drawCellObjBorders()
 			self.highlightHoveredCell()
 			self.drawCellObjTrueCentres()			
@@ -217,46 +219,36 @@ class DiagramWindow(pyglet.window.Window):
 			)
 
 		def findHoveredCell(self):
-			print("Finding hovered cell for mouse: " + str(self.mouseX) + ", " + str(self.mouseY))
+			#print("Finding hovered cell for mouse: " + str(self.mouseX) + ", " + str(self.mouseY))
 			cell = self.findContainingCell(self.mouseX, self.mouseY)
 			if cell:
 				self.hoveredCell = cell
-				#self.hoveredCell.toggleSelection(True)
-			else:
-				print("No hovered cell or cell was found")
+				#self.hoveredCell.toggleSelection()
 
 		def findContainingCell(self, x, y):
-			chosenKey = None
+			chosenCell = None
 			minDistance = 99999999
-			for key in self.cellObjs.keys():
-				cell = self.cellObjs[key]
-				distSqd = (cell.trueCentre.coords[0] - x)**2 + (cell.trueCentre.coords[1] - y)**2
+			for cell in self.cellObjs.values():
+				distSqd = math.sqrt((cell.centre.coords[0] - x)**2 + (cell.centre.coords[1] - y)**2)
 				if distSqd < minDistance:
-			#		chosenKey = cell
-					chosenKey = key
-					print("New chosen key is for cell " + str(self.cellObjs[chosenKey]))
+					chosenCell = cell
+					#print("New chosen key is for cell " + str(self.cellObjs[chosenKey]))
 					minDistance = distSqd
-			print("Min distance was: " + str(minDistance))
-			print("Id for that cell is: ")
-			chosenCell = self.cellObjs[chosenKey]
-			print(chosenCell.id)
-			if chosenKey:
-				if chosenKey in self.cellObjs.keys():
-					chosenCell = self.cellObjs[chosenKey]
-					print("Chosen cell avg points:")
-					x = [n.coords[0] for n in chosenCell.points]
-					y = [n.coords[0] for n in chosenCell.points]
-					print(sum(x)/len(x))
-					print(sum(y)/len(y))
-					return chosenCell
-				else:
-					print("ERROR: True Centre was not a key in cellObjs")
-			print("No containing cell")
+			#print("Min distance was: " + str(minDistance))
+			#print("Id for that cell is: ")
+			if chosenCell:
+				#print("Chosen cell avg points:")
+				#x = [n.coords[0] for n in chosenCell.points]
+				#y = [n.coords[1] for n in chosenCell.points]
+				#print(sum(x)/len(x))
+				#print(sum(y)/len(y))
+				return chosenCell
 			return None
 
-		def drawCellObjTrueCentres(self):
+		def drawCellObjTrueCentres(self):			
 			for cell in self.cellObjs.values():
-				cell.trueCentre.drawPoint()
+				col = cell.color
+				cell.trueCentre.drawPoint((col[0], col[1], col[2], 1))
 
 		def drawHoverCellTrueCentre(self):
 			if self.hoveredCell:
@@ -265,4 +257,4 @@ class DiagramWindow(pyglet.window.Window):
 		def highlightHoveredCell(self):
 			if self.hoveredCell:
 				col = self.hoveredCell.color
-				self.hoveredCell.drawFilledCell((col[0], col[1], col[2], 1))
+				self.hoveredCell.drawFilledCell((col[0], col[1], col[2], 0.6))

@@ -71,7 +71,7 @@ class VoronoiDiagram():
 			points.extend( [ (gridPoints[n][0] + xJitter, gridPoints[n][1] + yJitter) ] )
 		return points
 
-	def generatePoissonDiskPoints(self, minDist=700):
+	def generatePoissonDiskPoints(self, minDist=250):
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 
@@ -243,10 +243,6 @@ def clampCellObjsToBoundary(cells, xInterval, yInterval):
 	while cells:
 		key = random.choice(cells.keys())
 		cell = cells.pop(key)
-		if key == cell.id:
-			print("KEY MATCH")
-		else:
-			print("Key mismatch")
 
 		rejectCell = False	
 		# Clamp all points to interval
