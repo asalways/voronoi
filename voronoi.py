@@ -71,7 +71,7 @@ class VoronoiDiagram():
 			points.extend( [ (gridPoints[n][0] + xJitter, gridPoints[n][1] + yJitter) ] )
 		return points
 
-	def generatePoissonDiskPoints(self, minDist=75):
+	def generatePoissonDiskPoints(self, minDist=700):
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 
@@ -169,8 +169,8 @@ yDim = 600
 
 
 v = VoronoiDiagram( totalPoints=700, width=xDim, height=yDim)
-xMargin = 10
-yMargin = 10
+xMargin = 0
+yMargin = 0
 # Shifts all points according to size of margin
 v.applyMarginToPoints(xMargin, yMargin)
 
@@ -231,7 +231,7 @@ def createCellObjs(initialPoints, vor, pointObjs):
 			else:
 				points.append(pointObjs[n])
 		newCell = geometry.Cell( newCentre, points )
-		final[newCell.trueCentre] = newCell
+		final[newCell.id] = newCell
 	return final
 
 cellObjs = createCellObjs(v.points, vor, w.pointObjs)
@@ -243,6 +243,11 @@ def clampCellObjsToBoundary(cells, xInterval, yInterval):
 	while cells:
 		key = random.choice(cells.keys())
 		cell = cells.pop(key)
+		if key == cell.id:
+			print("KEY MATCH")
+		else:
+			print("Key mismatch")
+
 		rejectCell = False	
 		# Clamp all points to interval
 		pointsClamped = 0
@@ -272,7 +277,7 @@ def clampCellObjsToBoundary(cells, xInterval, yInterval):
 			ySum += point.coords[1]
 		# Retain cell only if not all points were clamped
 		if not pointsClamped == len(cell.points) and len(cell.points) > 0:
-			clampedCells[cell.trueCentre] = cell
+			clampedCells[cell.id] = cell
 			# Calculate true centre as average of points
 			#print("Cell points length: " + str(len(cell.points)))
 			cell.trueCentre = geometry.Point(xSum/len(cell.points), ySum/len(cell.points))

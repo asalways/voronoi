@@ -53,8 +53,11 @@ class DiagramWindow(pyglet.window.Window):
 			#self.drawRegions()
 			#self.drawRidgePoints()
 			#self.drawRidgeVertices()
-			self.drawFilledCells()
+			
+			#self.drawFilledCells()
 			self.drawCellObjBorders()
+			self.highlightHoveredCell()
+			self.drawCellObjTrueCentres()			
 			self.drawAreaLimit()
 
 		def drawPoints(self, points, col):
@@ -198,14 +201,14 @@ class DiagramWindow(pyglet.window.Window):
 			self.points = []
 
 		def drawAreaLimit(self):
-			print("Draw area limit")
+			#print("Draw area limit")
 			verts = []
 			verts.extend([self.xInterval[0],self.yInterval[0]])
 			verts.extend([self.xInterval[1],self.yInterval[0]])
 			verts.extend([self.xInterval[1],self.yInterval[1]])
 			verts.extend([self.xInterval[0],self.yInterval[1]])
-			print("Drawing point space with verts:")
-			print(verts)
+			#print("Drawing point space with verts:")
+			#print(verts)
 			pyglet.gl.glColor4f(1,1,1,1)
 			pyglet.graphics.draw( 
 				int(len(verts)/2), 
@@ -214,27 +217,52 @@ class DiagramWindow(pyglet.window.Window):
 			)
 
 		def findHoveredCell(self):
+			print("Finding hovered cell for mouse: " + str(self.mouseX) + ", " + str(self.mouseY))
 			cell = self.findContainingCell(self.mouseX, self.mouseY)
-			if self.hoveredCell:
-				if cell and cell != self.hoveredCell:
-					# Toggle old hovered cell off
-					self.hoveredCell.toggleSelection(False)
-					# Toggle hovered cell on
-					self.hoveredCell = cell
-					self.hoveredCell.toggleSelection(True)
-			elif cell:
+			if cell:
 				self.hoveredCell = cell
-				self.hoveredCell.toggleSelection(True)
+				#self.hoveredCell.toggleSelection(True)
+			else:
+				print("No hovered cell or cell was found")
 
 		def findContainingCell(self, x, y):
-			chosenPoint = None
+			chosenKey = None
 			minDistance = 99999999
-			for centrePoint in self.cellObjs.keys():
-				distSqd = (centrePoint.coords[0] - x)**2 + (centrePoint.coords[1] - y)**2
+			for key in self.cellObjs.keys():
+				cell = self.cellObjs[key]
+				distSqd = (cell.trueCentre.coords[0] - x)**2 + (cell.trueCentre.coords[1] - y)**2
 				if distSqd < minDistance:
-					chosenPoint = centrePoint
+			#		chosenKey = cell
+					chosenKey = key
+					print("New chosen key is for cell " + str(self.cellObjs[chosenKey]))
 					minDistance = distSqd
 			print("Min distance was: " + str(minDistance))
-			if chosenPoint:
-				return self.cellObjs[chosenPoint]
+			print("Id for that cell is: ")
+			chosenCell = self.cellObjs[chosenKey]
+			print(chosenCell.id)
+			if chosenKey:
+				if chosenKey in self.cellObjs.keys():
+					chosenCell = self.cellObjs[chosenKey]
+					print("Chosen cell avg points:")
+					x = [n.coords[0] for n in chosenCell.points]
+					y = [n.coords[0] for n in chosenCell.points]
+					print(sum(x)/len(x))
+					print(sum(y)/len(y))
+					return chosenCell
+				else:
+					print("ERROR: True Centre was not a key in cellObjs")
+			print("No containing cell")
 			return None
+
+		def drawCellObjTrueCentres(self):
+			for cell in self.cellObjs.values():
+				cell.trueCentre.drawPoint()
+
+		def drawHoverCellTrueCentre(self):
+			if self.hoveredCell:
+				self.hoveredCell.trueCentre.drawPoint((1,1,1,1))
+
+		def highlightHoveredCell(self):
+			if self.hoveredCell:
+				col = self.hoveredCell.color
+				self.hoveredCell.drawFilledCell((col[0], col[1], col[2], 1))
