@@ -71,7 +71,7 @@ class VoronoiDiagram():
 			points.extend( [ (gridPoints[n][0] + xJitter, gridPoints[n][1] + yJitter) ] )
 		return points
 
-	def generatePoissonDiskPoints(self, minDist=700):
+	def generatePoissonDiskPoints(self, minDist=150):
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 

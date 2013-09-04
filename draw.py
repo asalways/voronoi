@@ -38,8 +38,15 @@ class DiagramWindow(pyglet.window.Window):
 		#@Window.event
 		def on_mouse_press(self, x, y, button, modifiers):
 			if button == mouse.LEFT:
-				print("Left mouse button is pressed")
 				self.hoveredCell.toggleSelection()
+
+		def on_mouse_drag(self, x, y, dx, dy, button, modifiers):
+			self.mouseX = x
+			self.mouseY = y
+			if button == mouse.LEFT:
+				# If selection has changed, toggle selection for new cell
+				if self.findHoveredCell():
+					self.hoveredCell.toggleSelection()
 
 		#@Window.event
 		def on_mouse_motion(self, x, y, dx, dy):
@@ -222,9 +229,10 @@ class DiagramWindow(pyglet.window.Window):
 		def findHoveredCell(self):
 			#print("Finding hovered cell for mouse: " + str(self.mouseX) + ", " + str(self.mouseY))
 			cell = self.findContainingCell(self.mouseX, self.mouseY)
-			if cell:
+			if cell and self.hoveredCell != cell:
 				self.hoveredCell = cell
-				#self.hoveredCell.toggleSelection()
+				return True
+			return False
 
 		def findContainingCell(self, x, y):
 			chosenCell = None
