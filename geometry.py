@@ -20,7 +20,7 @@ class Point():
 class Cell():
 	def __init__(self, centre, points):
 		self.id = next(cellIdGen)		
-		self.centre = centre
+		self.vorCentre = centre
 		self.trueCentre = centre
 		self.points = points
 		self.color = (random.random(), random.random(), random.random(), 0.1)

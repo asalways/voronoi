@@ -71,7 +71,7 @@ class VoronoiDiagram():
 			points.extend( [ (gridPoints[n][0] + xJitter, gridPoints[n][1] + yJitter) ] )
 		return points
 
-	def generatePoissonDiskPoints(self, minDist=250):
+	def generatePoissonDiskPoints(self, minDist=700):
 		# Cell contains single point only; dim is a function of min dist between points
 		cellDim = math.sqrt(minDist)
 
@@ -167,7 +167,6 @@ yDim = 600
 # Mask image
 #maskImage = pyglet.resource.image('groundtruth5.bmp')
 
-
 v = VoronoiDiagram( totalPoints=700, width=xDim, height=yDim)
 xMargin = 0
 yMargin = 0
@@ -209,11 +208,14 @@ w.pointObjs = createPointObjs(vor)
 
 def createCellObjs(initialPoints, vor, pointObjs):
 	final = dict()
-	#print("Total regions:")
-	#print(len(vor.regions))
-	#print("Total points:")
-	#print(len(vor.points))
+	# print("Total regions:")
+	# print(len(vor.regions))
+	# print(vor.regions)
+	# print("Total points:")
+	# print(len(vor.points))
+	# print(vor.points)
 	for i in range(len(vor.points)):
+		regionIndex = vor.point_region[i]
 		#print("i: " + str(i))
 		# There are half as many points as there are values in initialPoints (is 2d)
 		#print(vor.points)
@@ -222,7 +224,7 @@ def createCellObjs(initialPoints, vor, pointObjs):
 		#print(newCentre.coords)
 		# Use index i to find set of points surrounding region
 		points = []
-		for n in vor.regions[i]:
+		for n in vor.regions[regionIndex]:
 			#print("n: " + str(n))
 			# Use point objects rather than vertex information
 			if n == -1:

@@ -59,7 +59,8 @@ class DiagramWindow(pyglet.window.Window):
 			self.drawFilledCells()
 			self.drawCellObjBorders()
 			self.highlightHoveredCell()
-			self.drawCellObjTrueCentres()			
+			#self.drawCellObjTrueCentres()
+			self.drawHoverCellVoronoiCentre()
 			self.drawAreaLimit()
 
 		def drawPoints(self, points, col):
@@ -229,7 +230,7 @@ class DiagramWindow(pyglet.window.Window):
 			chosenCell = None
 			minDistance = 99999999
 			for cell in self.cellObjs.values():
-				distSqd = math.sqrt((cell.centre.coords[0] - x)**2 + (cell.centre.coords[1] - y)**2)
+				distSqd = math.sqrt((cell.vorCentre.coords[0] - x)**2 + (cell.vorCentre.coords[1] - y)**2)
 				if distSqd < minDistance:
 					chosenCell = cell
 					#print("New chosen key is for cell " + str(self.cellObjs[chosenKey]))
@@ -253,6 +254,10 @@ class DiagramWindow(pyglet.window.Window):
 		def drawHoverCellTrueCentre(self):
 			if self.hoveredCell:
 				self.hoveredCell.trueCentre.drawPoint((1,1,1,1))
+
+		def drawHoverCellVoronoiCentre(self):
+			if self.hoveredCell:
+				self.hoveredCell.vorCentre.drawPoint((1,1,1,1))
 
 		def highlightHoveredCell(self):
 			if self.hoveredCell:
