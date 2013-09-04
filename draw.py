@@ -1,6 +1,9 @@
 import pyglet
 from pyglet.gl import *
 from pyglet.window import key
+from pyglet.window import Window
+
+from pyglet.window import mouse
 
 import geometry
 
@@ -25,6 +28,22 @@ class DiagramWindow(pyglet.window.Window):
 
 			self.pointObjs = []
 			self.cellObjs = []
+
+			self.mouseX = self.width/2
+			self.mouseY = self.height/2
+
+			self.hoveredCell = None
+
+		#@Window.event
+		def on_mouse_press(self, x, y, button, modifiers):
+			if button == mouse.LEFT:
+				print("Left mouse button is pressed")
+
+		#@Window.event
+		def on_mouse_motion(self, x, y, dx, dy):
+			self.mouseX = x
+			self.mouseY = y
+			self.findHoveredCell()
 
 		def on_draw(self):
 			self.clear()
@@ -123,7 +142,7 @@ class DiagramWindow(pyglet.window.Window):
 
 		def drawFilledCells(self):
 			#print("Drawing filled cells:")
-			for cell in self.cellObjs:
+			for cell in self.cellObjs.values():
 				#print("Cell:")
 				#print(cell.centre)
 				#print(cell.points)
@@ -131,7 +150,7 @@ class DiagramWindow(pyglet.window.Window):
 				#break
 
 		def drawCellObjBorders(self):
-			for cell in self.cellObjs:
+			for cell in self.cellObjs.values():
 				cell.drawCellBorder()
 
 		def addPointsForDrawing(self, newPoints=[]):			
@@ -193,3 +212,29 @@ class DiagramWindow(pyglet.window.Window):
 				pyglet.gl.GL_LINE_LOOP,
 				('v2f', verts)
 			)
+
+		def findHoveredCell(self):
+			cell = self.findContainingCell(self.mouseX, self.mouseY)
+			if self.hoveredCell:
+				if cell and cell != self.hoveredCell:
+					# Toggle old hovered cell off
+					self.hoveredCell.toggleSelection(False)
+					# Toggle hovered cell on
+					self.hoveredCell = cell
+					self.hoveredCell.toggleSelection(True)
+			elif cell:
+				self.hoveredCell = cell
+				self.hoveredCell.toggleSelection(True)
+
+		def findContainingCell(self, x, y):
+			chosenPoint = None
+			minDistance = 99999999
+			for centrePoint in self.cellObjs.keys():
+				distSqd = (centrePoint.coords[0] - x)**2 + (centrePoint.coords[1] - y)**2
+				if distSqd < minDistance:
+					chosenPoint = centrePoint
+					minDistance = distSqd
+			print("Min distance was: " + str(minDistance))
+			if chosenPoint:
+				return self.cellObjs[chosenPoint]
+			return None
